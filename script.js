@@ -79,7 +79,7 @@ class Transacao {
     }
 
     static pagamentoSalario (contaOrigem, contaDestino, idPagamento, dataDoPagamento, valorDoSalario) {
-        if(contaOrigem instanceof PessoaFisica && valorDoSalario <= 1000) {
+        if(contaOrigem instanceof PessoaFisica && valorDoSalario <= 1000 || contaOrigem instanceof PessoaJuridica) {
           if(contaOrigem.saldo >= valorDoSalario) {
             contaOrigem.saldo -= valorDoSalario
             contaDestino.saldo += valorDoSalario
