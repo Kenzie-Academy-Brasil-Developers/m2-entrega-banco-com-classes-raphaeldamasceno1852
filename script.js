@@ -79,37 +79,36 @@ class Transacao {
     }
 
     static pagamentoSalario (contaOrigem, contaDestino, idPagamento, dataDoPagamento, valorDoSalario) {
-        if(contaOrigem instanceof PessoaFisica && valorDoSalario <= 1000 || contaOrigem instanceof PessoaJuridica) {
-          if(contaOrigem.saldo >= valorDoSalario) {
-            contaOrigem.saldo -= valorDoSalario
-            contaDestino.saldo += valorDoSalario
-            contaDestino.historico.push({
-              idPagamento: idPagamento,
-              dataDoPagamento: dataDoPagamento,
-              valorDoSalario: valorDoSalario,
-              tipo: "recebimento",
+        if(contaOrigem instanceof PessoaFisica && valorDoSalario > 1000) {
+          return {
+            mensagem: "Seu limite máximo para este tipo de operação é de 1000. Entre em contato com o banco."
+          }
+        }
+        else if (contaOrigem.saldo < valorDoSalario){
+          return {
+            mensagem: "Saldo insuficiente para realizar o pagamento!"
+          }
+        } else {
+          contaDestino.saldo += valorDoSalario
+          contaOrigem.saldo -= valorDoSalario
+          contaDestino.historico.push({
+            idPagamento: idPagamento,
+            dataDoPagamento: dataDoPagamento,
+            valorDoSalario: valorDoSalario,
+            tipo: "recebimento",
           })
           contaOrigem.historico.push({
             idPagamento: idPagamento,
             dataDoPagamento: dataDoPagamento,
             valorDoSalario: valorDoSalario,
-            tipo: "pagamento",
+            tipo: "pagamento"
           })
           return {
             mensagem: "Pagamento realizado com sucesso!"
           }
         }
-          return {
-            mensagem: "Saldo insuficiente para realizar o pagamento!"
-          }
-        }
-        else{
-          return {
-            mensagem: "Seu limite máximo para este tipo de operação é de 1000, entre em contato com o banco!"
-          }
-        }
       }
-    }    
+    }
 
     const testes = () => {
       const Lennon = new PessoaJuridica("01", "Vip", "16/05/2022", 156, 2798, 987654321, 1000, "Lennon", "1011121314", "lennon@email.com.br", 1234567890, "16/05/2022");
